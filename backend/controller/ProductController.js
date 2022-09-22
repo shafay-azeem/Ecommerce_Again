@@ -1,26 +1,34 @@
 const Product = require("../models/ProductModel");
-const ErrorHandler = require("../utils/ErrorHandler.js");
+const ErrorHandler = require("../utils/ErrorHandler");
+const catchAsyncError=require("../middleware/catchAsyncError")
+const Features = require("../utils/Features")
+const asyncHandler = require("express-async-handler");
 
 
-exports.createProduct = async (req, res, next) => {
+exports.createProduct = asyncHandler(async(req, res, next) => {
     const product = await Product.create(req.body);
     res.status(201).json({
         success: true,
         product
     })
 
-}
+})
 
-exports.getAllProducts = async (req, res) => {
-    const products = await Product.find();
+
+exports.getAllProducts = asyncHandler(async (req, res) => {
+    const resultPerPage = 8
+    const productCount = await Product.countDocuments()
+    const feature = new Features(Product.find(), req.query)
+      .search().filter().pagination(resultPerPage)
+    const products = await feature.query;
     res.status(200).json({
-        success: true,
-        products
-    })
-}
+      success: true,
+      products,
+    });
+  });
 
 
-exports.updateProduct = async (req, res) => {
+exports.updateProduct = asyncHandler(async (req, res) => {
     let product = await Product.findById(req.params.id);
     if (!product) {
         return res.status(500).json({
@@ -41,9 +49,9 @@ exports.updateProduct = async (req, res) => {
     })
 
 }
+)
 
-
-exports.deleteProduct = async (req, res) => {
+exports.deleteProduct = asyncHandler (async (req, res) => {
     let product = await Product.findById(req.params.id);
     if (!product) {
         return res.status(500).json({
@@ -60,23 +68,25 @@ exports.deleteProduct = async (req, res) => {
     })
 
 }
+)
 
-
-exports.singleProduct = async (req, res ,next) => {
+exports.singleProduct =asyncHandler( async (req, res ,next) => {
     const product = await Product.findById(req.params.id);
     
     if (!product) {
-        return next(new ErrorHandler("Product not found with this id", 404));
+     
 
-        // return res.status(500).json({
-        //     success: false,
-        //     message: "Invalid Id"
-        // })
+        return res.status(500).json({
+            success: false,
+            message: "Invalid Id"
+        })
     }
 
     res.status(200).json({
         success: true,
-        product
+        product,
+        // productCount
     })
 }
 
+)

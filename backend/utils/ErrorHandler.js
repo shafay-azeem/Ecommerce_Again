@@ -8,7 +8,14 @@ class ErrorHandler extends Error{
     }
 }
 
+// const ErrorHandler=(message, statusCode)=>{
+ 
+
+//     ErrorHandler.captureStackTrace(message,statusCode)
+
+// }
 
 
 
-module.exports = ErrorHandler
+
+module.exports =ErrorHandler
