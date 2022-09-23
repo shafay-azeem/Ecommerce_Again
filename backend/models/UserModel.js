@@ -43,24 +43,27 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,
-}); 
+});
 
 
 // hash password
 
-userSchema.pre("save", async function(next){  
-   this.password= await bcrypt.hash(this.password,10)
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  this.password = await bcrypt.hash(this.password, 10)
 
 })
 
 
 // jwt token 
 
-userSchema.methods.getJwtToken = function(){
-  return jwt.sign({id:this._id},process.env.JWT_SECRET_KEY,{
-    expiresIn :"30d"
+userSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "30d"
   })
- 
+
 }
 
 
@@ -70,18 +73,14 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 };
 
 // forgot password 
-userSchema.methods.getResetToken = function(){
-
-
-    //generating Token
-  const resetToken=crypto.randomBytes(16).toString('hex')
-
-
-  this.resetPasswordToken=crypto.create('sha256').update(resetToken).digest('hex')
-  this.resetPasswordToken= Date.now()+15*60*1000
+userSchema.methods.getResetToken = function () {
+  //generating Token
+  const resetToken = crypto.randomBytes(16).toString('hex')
+  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.resetPasswordToken = Date.now() + 15 * 60 * 1000
 
   return resetToken
-} 
+}
 
 
 
