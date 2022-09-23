@@ -17,21 +17,16 @@ exports.isAuthenticatedUser=(asyncHandler(async(req,res,next)=>{
 
     const decodedData=jwt.verify(token,process.env.JWT_SECRET_KEY)
 
-    const user = await User.findById(decodedData.id)
+    req.user = await User.findById(decodedData.id)
     console.log(user.role)
     next();
 }))
 
-exports.isAuthorizedRole=(...roles)=>{
-    return (req,res,next)=>{
+exports.authorizeRoles = (...roles) =>{
+    return (req,res,next) =>{
         if(!roles.includes(req.user.role)){
-            return res.status(400).json({
-                success: false,
-                message: res
-            })
-        }
-        next ();
-        console.log('nextt')
+          return next(new ErrorHandler(`${req.user.role} can not access this resources`));
+        };
+        next();
     }
-
 }
