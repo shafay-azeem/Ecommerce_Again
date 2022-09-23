@@ -76,3 +76,10 @@ exports.logOut= asyncHandler(async(req,res,next)=>{
 
 
 })
+
+
+//forgot Password
+
+exports.forgotPassword= asyncHandler(async(req,res,next)=>{
+    
+})
