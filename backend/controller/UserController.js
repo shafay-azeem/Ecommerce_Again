@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const asyncHandler = require("express-async-handler");
+const sendToken = require("../utils/jwtToken");
 
 
 
@@ -19,14 +20,8 @@ exports.createUser = asyncHandler(async(req, res, next) => {
 
     
     });
-    
-    const token =user.getJwtToken();
 
-    res.status(201).json({
-        success: true,
-        token
-    })
-
+    sendToken(user,201,res)
 })
 
 //login
@@ -60,10 +55,24 @@ exports.loginUser= asyncHandler(async(req,res,next)=>{
     }) 
   }
 
-  const token =user.getJwtToken();
+  sendToken(user,201,res)
+})
 
-  res.status(201).json({
-      success: true,
-      token
-  })
+//logout
+
+
+exports.logOut= asyncHandler(async(req,res,next)=>{
+    res.cookie("token",null,{
+        expires: new Date(
+            Date.now()
+        ),
+        httpOnly: true
+    })
+    
+    res.status(200).json({
+        success: true,
+        message:'Logout Success'
+    });
+
+
 })
