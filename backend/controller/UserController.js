@@ -2,7 +2,7 @@ const User = require("../models/UserModel");
 const asyncHandler = require("express-async-handler");
 const sendToken = require("../utils/jwtToken");
 const sendMail = require("../utils/sendMail.js");
-
+const crypto = require("crypto");
 
 
 exports.createUser = asyncHandler(async (req, res, next) => {
@@ -129,4 +129,44 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         })
 
     }
+})
+
+
+// Reset Password
+
+exports.resetPassword=asyncHandler(async (req, res, next) => {
+
+    //Create Token Hash
+    const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex")
+   
+
+
+    const user = await User.findOne({resetPasswordToken,resetPasswordTime:{$gt:Date.now()}})
+    console.log( user,'uuser')
+
+
+    if(!user){
+        return res.status(400).json({
+            success: false,
+            message: `Reset password url is invalid or has been expired`
+        })
+        
+    }
+    
+    if(req.body.password !== req.body.confirmPassword){
+        return res.status(400).json({
+            success: false,
+            message: `Password Must be same in Both Fields`
+        })
+    }
+
+    user.password=req.body.password;
+
+
+    user.resetPasswordToken=undefined
+    user.resetPasswordTime= undefined
+
+    await user.save()
+
+    sendToken(user,200,res)
 })
