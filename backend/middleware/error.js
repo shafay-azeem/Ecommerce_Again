@@ -33,7 +33,7 @@ if(err.name==="CastError"){
 
     res.status(err.statusCode).json({
         success:false,
-        message:err.message
+        message:err.stack
     })
 }
 
