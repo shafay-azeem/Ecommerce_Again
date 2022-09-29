@@ -8,20 +8,20 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
         shippingInfo,
         orderItems,
         paymentInfo,
-        itemsPrice,
+        // itemsPrice,
         taxPrice,
         shippingPrice,
-        totalPrice,
+        // totalPrice,
     } = req.body;
 
     const order = await Order.create({
         shippingInfo,
         orderItems,
         paymentInfo,
-        itemsPrice,
-        taxPrice,
+        itemsPrice:
+            taxPrice,
         shippingPrice,
-        totalPrice,
+        totalPrice: parseInt(itemsPrice) + parseInt(taxPrice) + parseInt(shippingPrice),
         paidAt: Date.now(),
         user: req.user._id,
     });

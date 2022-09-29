@@ -1,4 +1,6 @@
+const Product = require("../models/ProductModel");
 const mongoose = require("mongoose");
+
 
 const orderSchema = new mongoose.Schema({
   shippingInfo: {
@@ -73,8 +75,9 @@ const orderSchema = new mongoose.Schema({
   },
   itemsPrice: {
     type: Number,
+    ref: "Product",
     required: true,
-    default: 0,
+    default: Product.price,
   },
   taxPrice: {
     type: Number,
@@ -87,7 +90,6 @@ const orderSchema = new mongoose.Schema({
   },
   totalPrice: {
     type: Number,
-    required: true,
     default: 0,
   },
   orderStatus: {
