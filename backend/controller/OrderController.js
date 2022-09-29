@@ -1,27 +1,29 @@
 const Order = require("../models/OrderModel");
 const asyncHandler = require("express-async-handler");
+const Product = require("../models/ProductModel");
 
 // Create Order
 exports.createOrder = asyncHandler(async (req, res, next) => {
+
 
     const {
         shippingInfo,
         orderItems,
         paymentInfo,
-        // itemsPrice,
+        itemsPrice,
         taxPrice,
         shippingPrice,
-        // totalPrice,
+        totalPrice,
     } = req.body;
 
     const order = await Order.create({
         shippingInfo,
         orderItems,
         paymentInfo,
-        itemsPrice:
-            taxPrice,
+        itemsPrice,
+        taxPrice,
         shippingPrice,
-        totalPrice: parseInt(itemsPrice) + parseInt(taxPrice) + parseInt(shippingPrice),
+        totalPrice,
         paidAt: Date.now(),
         user: req.user._id,
     });

@@ -75,9 +75,8 @@ const orderSchema = new mongoose.Schema({
   },
   itemsPrice: {
     type: Number,
-    ref: "Product",
     required: true,
-    default: Product.price,
+    default: 0,
   },
   taxPrice: {
     type: Number,
