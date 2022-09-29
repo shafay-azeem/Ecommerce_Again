@@ -22,7 +22,12 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 
     });
 
-    sendToken(user, 201, res)
+    // sendToken(user, 201, res)
+    return res.status(201).json({
+        success: true,
+        user,
+        token: user.getJwtToken(user._id)
+    })
 })
 
 //login
@@ -56,7 +61,15 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
         })
     }
 
-    sendToken(user, 201, res)
+    //sendToken(user, 201, res)
+    return res.status(201).json({
+        success: true,
+        user,
+        token: user.getJwtToken(user._id)
+    })
+
+
+
 })
 
 //logout
