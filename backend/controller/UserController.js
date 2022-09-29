@@ -181,7 +181,11 @@ exports.resetPassword=asyncHandler(async (req, res, next) => {
 
     await user.save()
 
-    sendToken(user,200,res)
+    //sendToken(user,200,res)
+    return res.status(200).json({
+        success: true,
+        user
+    })
 })
 
 // Get user details
@@ -193,7 +197,11 @@ exports.userDetails=asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.user.id);
 
 
-    sendToken(user, 200, res)
+    //sendToken(user, 200, res)
+    return res.status(200).json({
+        success: true,
+        user
+    })
 })
 
 
@@ -218,7 +226,11 @@ exports.updatePassword=asyncHandler(async (req, res, next) => {
 
     user.password = req.body.newPassword;
     await user.save();
-    sendToken(user,200,res)
+    //sendToken(user,200,res)
+    return res.status(200).json({
+        success: true,
+        user
+    })
 
 })
 
@@ -238,7 +250,11 @@ exports.updateProfile=asyncHandler(async (req, res, next) => {
     })
 
 
-    sendToken(user,200,res)
+    //sendToken(user,200,res)
+    return res.status(200).json({
+        success: true,
+        user
+    })
 
     
 })
@@ -265,7 +281,11 @@ exports.getSingleUser = asyncHandler(async (req,res,next) =>{
             message: "User is not found with this id"
         })
     }
-    sendToken(user,200,res)
+    //sendToken(user,200,res)
+    return res.status(200).json({
+        success: true,
+        user
+    })
 });
 
 
